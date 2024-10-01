@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "endstone_tips"
+version = "0.0.1"
+dependencies = []
+authors = [
+    { name = "LT_Name" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["endstone", "plugin", "tips", "scoreboard"]
+
+[project.urls]
+Homepage = "https://github.com/MemoriesOfTime/Tips-Endstone"
+
+[project.entry-points."endstone"]
+tips = "endstone_tips:Tips"

@@ -1,0 +1,1 @@
+pipx run build --wheel
