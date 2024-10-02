@@ -1,15 +1,9 @@
-from endstone.event import event_handler, EventPriority, PlayerJoinEvent, PlayerChatEvent
-
+from endstone.event import event_handler, EventPriority, PlayerChatEvent, ServerListPingEvent
 
 from endstone_tips.utils.api import str_replace
 
 
 class OnListener:
-
-    @event_handler
-    def on_player_join(self, event: PlayerJoinEvent):
-        event.player.send_message("Welcome to the server!")
-        pass
 
     @event_handler(ignore_cancelled=True, priority=EventPriority.HIGH)
     def on_player_chat(self, event: PlayerChatEvent):
@@ -29,4 +23,11 @@ class OnListener:
             tips_instance.server.broadcast_message(message)
         pass
 
-    pass
+    @event_handler
+    def on_server_list_ping(self, event: ServerListPingEvent):
+        from endstone_tips.tips import tips_instance
+        enable = tips_instance.plugin_config.get_motd_set()["是否启用"]
+        if tips_instance.plugin_config.get_motd_set()["是否启用"]:
+            motd = tips_instance.plugin_config.get_motd_set()["内容"]
+            event.motd = str_replace(motd, None)
+        pass

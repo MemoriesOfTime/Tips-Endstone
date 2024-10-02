@@ -6,7 +6,7 @@ class BaseVariable(ABC):
     def __init__(self):
         self.__string: str = ""
         self.player = None
-        self.variable = []
+        self.__variable = []
         pass
 
     @abstractmethod
@@ -18,7 +18,7 @@ class BaseVariable(ABC):
         pass
 
     def add_variable(self, key: str, value):
-        self.variable.append({key: str(value)})
+        self.__variable.append({key: str(value)})
         pass
 
     @property
@@ -32,7 +32,7 @@ class BaseVariable(ABC):
 
     def __string_replace(self, player):
         s = self.__string
-        for i in self.variable:
+        for i in self.__variable:
             for key, value in i.items():
                 s = s.replace(key, value)
         return s

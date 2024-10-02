@@ -70,6 +70,7 @@ class DefaultVariable(BaseVariable):
         self.add_variable("{tps}", tips_instance.server.current_tps)
         self.add_variable("{online}", len(tips_instance.server.online_players))
         self.add_variable("{maxplayer}", tips_instance.server.max_players)
+        self.add_variable("{version}", tips_instance.server.minecraft_version)
         pass
 
     def update_other(self):

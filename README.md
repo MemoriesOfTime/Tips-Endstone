@@ -1,5 +1,5 @@
 # **Tips - Endstone**
-适用于Endstone的Tips插件，从 [Tips](https://github.com/SmallasWater/Tips) 移植  
+适用于[Endstone](https://github.com/EndstoneMC/endstone)的Tips插件，从 [Tips](https://github.com/SmallasWater/Tips) 移植  
 目前项目正在开发中，功能仍不完善，请等待后续更新  
 
 #### 使用说明

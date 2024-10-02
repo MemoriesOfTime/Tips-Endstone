@@ -40,3 +40,9 @@ class PluginConfig:
 
     def get_variable(self) -> []:
         return self._config.get("变量显示", [])
+
+    def get_motd_set(self) -> []:
+        return self._config.get("自定义MOTD", [])
+
+    def get_refresh_set(self) -> []:
+        return self._config.get("自定义刷新刻度", [])
