@@ -1,17 +1,21 @@
-
+import random
 from datetime import datetime
+
 from endstone_tips.utils.variables.base_variable import BaseVariable
+
 
 class DefaultVariable(BaseVariable):
 
     def __init__(self):
         super().__init__()
+        self.color_code = ["§c", "§6", "§e", "§a", "§b", "§9", "§d", "§7", "§5"]
         pass
 
     def on_update(self):
         self.update_time()
         self.update_player_info()
         self.update_server_info()
+        self.update_other()
         pass
 
     def update_time(self):
@@ -70,4 +74,5 @@ class DefaultVariable(BaseVariable):
 
     def update_other(self):
         self.add_variable("{换行}", "\n")
+        self.add_variable("{color}", random.choice(self.color_code))
         pass

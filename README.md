@@ -25,7 +25,7 @@ class DemoVariable(BaseVariable):
 ```
 注册创建的变量类
 ```python
-from endstone_tips.utils.variables.default_variable import DefaultVariable
+from endstone_tips.utils.api import register_variable
 
 register_variable("demo", DemoVariable)
 ```
