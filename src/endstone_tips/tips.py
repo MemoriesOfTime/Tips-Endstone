@@ -11,7 +11,7 @@ tips_instance = None
 class Tips(Plugin):
 
     prefix = "Tips"
-    version = "0.0.2"
+    version = "0.0.3"
     api_version = "0.5"
 
     description = "Tips plugin for Endstone."
