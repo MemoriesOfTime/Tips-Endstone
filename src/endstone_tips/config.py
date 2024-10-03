@@ -22,6 +22,12 @@ class ThemeConfig:
             return config[world]
         return config["default"]
 
+    def get_boss_bar_set(self, world: str) -> []:
+        config = self._config.get("Boss血条", [])
+        if world in config:
+            return config[world]
+        return config["default"]
+
     pass
 
 

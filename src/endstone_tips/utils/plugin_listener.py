@@ -1,4 +1,4 @@
-from endstone.event import event_handler, EventPriority, PlayerChatEvent, ServerListPingEvent
+from endstone.event import event_handler, EventPriority, PlayerChatEvent, ServerListPingEvent, PlayerQuitEvent
 
 from endstone_tips.utils.api import str_replace
 
@@ -30,4 +30,10 @@ class OnListener:
         if tips_instance.plugin_config.get_motd_set()["是否启用"]:
             motd = tips_instance.plugin_config.get_motd_set()["内容"]
             event.motd = str_replace(motd, None)
+        pass
+
+    @event_handler
+    def on_player_quit(self, event: PlayerQuitEvent):
+        from endstone_tips.tips import tips_instance, BOSS_BAR_TYPE
+        tips_instance.tasks[BOSS_BAR_TYPE].remove_player(event.player)
         pass

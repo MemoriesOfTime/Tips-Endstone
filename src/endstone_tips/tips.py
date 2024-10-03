@@ -1,6 +1,7 @@
 from endstone.plugin import Plugin
 
 from endstone_tips.config import PluginConfig
+from endstone_tips.tasks.boss_bar_task import BossBarTask
 from endstone_tips.tasks.scoreboard_task import ScoreBoardTask
 from endstone_tips.utils.api import register_variable
 from endstone_tips.utils.plugin_listener import OnListener
@@ -8,10 +9,13 @@ from endstone_tips.utils.variables.default_variable import DefaultVariable
 
 tips_instance = None
 
+BOSS_BAR_TYPE = 0
+SCOREBOARD_TYPE = 1
+
 class Tips(Plugin):
 
     prefix = "Tips"
-    version = "0.0.3"
+    version = "0.0.4"
     api_version = "0.5"
 
     description = "Tips plugin for Endstone."
@@ -22,6 +26,7 @@ class Tips(Plugin):
         tips_instance = self
 
         self.plugin_config = None
+        self.tasks = []
 
     def on_load(self):
         if not self.data_folder.exists():
@@ -42,7 +47,11 @@ class Tips(Plugin):
         self.register_events(OnListener())
 
         # 注册Task
-        self.server.scheduler.run_task(self, ScoreBoardTask().on_update, 0, self.plugin_config.get_refresh_set()["计分板"])
+        self.tasks.append(BossBarTask())
+        self.tasks.append(ScoreBoardTask())
+
+        self.server.scheduler.run_task(self, self.tasks[BOSS_BAR_TYPE].on_update, 0, self.plugin_config.get_refresh_set()["Boss血条"])
+        self.server.scheduler.run_task(self, self.tasks[SCOREBOARD_TYPE].on_update, 0, self.plugin_config.get_refresh_set()["计分板"])
 
         self.logger.info("插件加载完成~")
         pass
