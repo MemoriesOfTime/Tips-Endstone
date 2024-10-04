@@ -28,6 +28,12 @@ class ThemeConfig:
             return config[world]
         return config["default"]
 
+    def get_tip_set(self, world: str) -> []:
+        config = self._config.get("底部", [])
+        if world in config:
+            return config[world]
+        return config["default"]
+
     pass
 
 
