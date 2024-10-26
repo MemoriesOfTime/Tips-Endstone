@@ -40,9 +40,7 @@ class BossBarTask(BaseTask):
             t = time.time()
             dt = t - self.update_time.get(player, 0)
             if config["是否根据玩家血量变化"]:
-                # TODO 等endstone实现相关接口后修改
-                # boss_bar.progress = self.scale_to_range(player.health, 0, player.max_health)
-                boss_bar.progress = 1.0
+                boss_bar.progress = self.scale_to_range(player.health, 0, player.max_health)
                 pass
             else:
                 boss_bar.progress = 1 - self.scale_to_range(float(dt), float(0), float(config["间隔时间"]))

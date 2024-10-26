@@ -36,6 +36,8 @@ class DefaultVariable(BaseVariable):
         self.add_variable("{player}", self.player.name)
         self.add_variable("{name}", self.player.name)
         self.add_variable("{ms}", self.player.ping)
+        self.add_variable("{h}", self.player.health)
+        self.add_variable("{mh}", self.player.max_health)
         self.add_variable("{levelName}", self.player.level.name)
         self.add_variable("{x}", f"{self.player.location.x:.1f}")
         self.add_variable("{y}", f"{self.player.location.y:.1f}")
