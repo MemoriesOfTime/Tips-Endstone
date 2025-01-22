@@ -45,7 +45,7 @@ class BossBarTask(BaseTask):
             else:
                 boss_bar.progress = 1 - self.scale_to_range(float(dt), float(0), float(config["间隔时间"]))
 
-            boss_bar.visible = True
+            boss_bar.is_visible = True
             boss_bar.add_player(player)
             self.boss_bar[player] = boss_bar
 

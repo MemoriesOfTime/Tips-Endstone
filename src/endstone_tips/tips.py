@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from endstone.plugin import Plugin
 
 from endstone_tips.config import PluginConfig
@@ -20,7 +22,7 @@ BROAD_CAST_TYPE = 5
 class Tips(Plugin):
 
     prefix = "Tips"
-    version = "0.0.6"
+    version = "0.0.7"
     api_version = "0.5"
 
     description = "Tips plugin for Endstone."
@@ -36,9 +38,10 @@ class Tips(Plugin):
     def on_load(self):
         if not self.data_folder.exists():
             self.data_folder.mkdir()
-            self.save_resources("Tips变量.txt")
-            self.save_resources("config.toml")
+        self.save_default_config()
+        if not (Path(self.data_folder) / "theme/default.toml").exists():
             self.save_resources("theme/default.toml")
+        self.save_resources("Tips变量.txt", replace=True)
         pass
 
     def on_enable(self):
