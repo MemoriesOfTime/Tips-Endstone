@@ -41,6 +41,7 @@ class Tips(Plugin):
                 "/tips reload",
                 "/tips send <player: player> <type: string> <message: message>",
                 "/tips theme [name: string]",
+                "/tips gui",
                 "/tips help",
             ],
             "aliases": ["tip"],

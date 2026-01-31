@@ -8,9 +8,14 @@ def handle_tips_command(plugin, sender: CommandSender, command: Command, args: l
     """处理 /tips 命令"""
     
     if len(args) == 0:
-        # 无参数时显示帮助
-        send_help(sender)
-        return True
+        # 无参数时：玩家打开 GUI，控制台显示帮助
+        if isinstance(sender, Player):
+            from endstone_tips.gui import show_main_menu
+            show_main_menu(sender)
+            return True
+        else:
+            send_help(sender)
+            return True
     
     sub_command = args[0].lower()
     
@@ -23,6 +28,14 @@ def handle_tips_command(plugin, sender: CommandSender, command: Command, args: l
     elif sub_command == "help":
         send_help(sender)
         return True
+    elif sub_command == "gui":
+        if isinstance(sender, Player):
+            from endstone_tips.gui import show_main_menu
+            show_main_menu(sender)
+            return True
+        else:
+            sender.send_message("§c请在游戏内执行此命令")
+            return False
     else:
         sender.send_message("§c未知子命令，使用 /tips help 查看帮助")
         return False
@@ -32,10 +45,12 @@ def send_help(sender: CommandSender):
     """发送帮助信息"""
     sender.send_message("§a==================== Tips ====================")
     if sender.is_op:
+        sender.send_message("§e/tips §7- 打开设置 GUI (仅玩家)")
         sender.send_message("§e/tips reload §7- 重新加载配置")
         sender.send_message("§e/tips send <玩家> <类型> <信息> §7- 发送消息给玩家")
         sender.send_message("§7  类型: tip, popup, action, title, msg")
     sender.send_message("§e/tips theme [主题名] §7- 查看/切换主题")
+    sender.send_message("§e/tips gui §7- 打开设置 GUI")
     sender.send_message("§e/tips help §7- 显示此帮助")
     sender.send_message("§a================================================")
 
