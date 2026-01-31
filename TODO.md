@@ -80,9 +80,9 @@
 
 ### Phase 3: GUI 系统 (优先级: 中)
 
-- [ ] 3.1 基础 Form API 封装 (2h)
-- [ ] 3.2 设置 GUI (3h)
-- [ ] 3.3 主题选择 GUI (2h)
+- [x] 3.1 基础 Form API 封装 (2h) ✅ 2026-01-31
+- [x] 3.2 设置 GUI (3h) ✅ 2026-01-31
+- [x] 3.3 主题选择 GUI (2h) ✅ 2026-01-31
 
 ### Phase 4: 高级功能 (优先级: 低)
 
@@ -103,6 +103,9 @@
 
 ## 📝 更新日志
 
+- 2026-01-31: Phase 3 完成
+  - 添加 GUI 系统: 主菜单、玩家列表、设置编辑、主题选择
+  - 使用 ActionForm + ModalForm 实现
 - 2026-01-31: Phase 2 完成
   - 添加命令系统: /tips reload, send, theme, help
   - 权限: tips.command, tips.admin
