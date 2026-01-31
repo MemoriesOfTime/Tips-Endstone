@@ -1,7 +1,9 @@
 from pathlib import Path
 
+from endstone.command import Command, CommandSender
 from endstone.plugin import Plugin
 
+from endstone_tips.commands import handle_tips_command
 from endstone_tips.config import PluginConfig
 from endstone_tips.tasks.boss_bar_task import BossBarTask
 from endstone_tips.tasks.broadcast_task import BroadcastTask
@@ -29,6 +31,34 @@ class Tips(Plugin):
     api_version = "0.10"
 
     description = "Tips plugin for Endstone."
+
+    # 命令注册
+    commands = {
+        "tips": {
+            "description": "Tips 插件主命令",
+            "usages": [
+                "/tips",
+                "/tips reload",
+                "/tips send <player: player> <type: string> <message: message>",
+                "/tips theme [name: string]",
+                "/tips help",
+            ],
+            "aliases": ["tip"],
+            "permissions": ["tips.command"],
+        }
+    }
+
+    # 权限注册
+    permissions = {
+        "tips.command": {
+            "description": "允许使用 /tips 命令",
+            "default": True,
+        },
+        "tips.admin": {
+            "description": "允许使用 /tips 管理命令 (reload, send)",
+            "default": "op",
+        },
+    }
 
     def __init__(self):
         super().__init__()
@@ -89,6 +119,12 @@ class Tips(Plugin):
         )
 
         self.logger.info("Tips 插件加载完成~")
+
+    def on_command(self, sender: CommandSender, command: Command, args: list[str]) -> bool:
+        """处理命令"""
+        if command.name == "tips":
+            return handle_tips_command(self, sender, command, args)
+        return False
 
     def on_disable(self):
         pass
