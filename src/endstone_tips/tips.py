@@ -11,6 +11,7 @@ from endstone_tips.tasks.nametag_task import NameTagTask
 from endstone_tips.tasks.scoreboard_task import ScoreBoardTask
 from endstone_tips.tasks.tip_task import TipTask
 from endstone_tips.utils.api import register_variable
+from endstone_tips.utils.economy import EconomyManager
 from endstone_tips.utils.player_config import PlayerConfig
 from endstone_tips.utils.plugin_listener import OnListener
 from endstone_tips.utils.theme_manager import ThemeManager
@@ -71,6 +72,7 @@ class Tips(Plugin):
         self.plugin_config = None
         self.player_config = None
         self.theme_manager = None
+        self.economy_manager = None
         self.tasks = {}
 
     def on_load(self):
@@ -90,6 +92,13 @@ class Tips(Plugin):
         
         # 初始化主题管理器
         self.theme_manager = ThemeManager(Path(self.data_folder))
+        
+        # 初始化经济管理器 (软依赖)
+        self.economy_manager = EconomyManager(self.server)
+        if self.economy_manager.is_available():
+            self.logger.info("已检测到经济插件，{money} 变量可用")
+        else:
+            self.logger.info("未检测到经济插件，{money} 变量将显示 N/A")
 
         # 注册变量
         register_variable("default", DefaultVariable)

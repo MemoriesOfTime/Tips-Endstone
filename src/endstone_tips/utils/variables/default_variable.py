@@ -168,8 +168,9 @@ class DefaultVariable(BaseVariable):
         else:
             self.add_variable("{fly}", fly_config.get("1", "飞行关闭"))
 
-        # 金币 (占位符，需要经济插件集成)
-        self.add_variable("{money}", "0")
+        # 金币 (通过经济插件获取)
+        money = tips_instance.economy_manager.get_balance_formatted(self.player.name)
+        self.add_variable("{money}", money)
 
     def update_server_info(self):
         from endstone_tips.tips import tips_instance
