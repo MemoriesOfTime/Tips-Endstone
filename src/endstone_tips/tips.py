@@ -4,6 +4,8 @@ from endstone.plugin import Plugin
 
 from endstone_tips.config import PluginConfig
 from endstone_tips.tasks.boss_bar_task import BossBarTask
+from endstone_tips.tasks.broadcast_task import BroadcastTask
+from endstone_tips.tasks.nametag_task import NameTagTask
 from endstone_tips.tasks.scoreboard_task import ScoreBoardTask
 from endstone_tips.tasks.tip_task import TipTask
 from endstone_tips.utils.api import register_variable
@@ -18,6 +20,7 @@ NAME_TAG_TYPE = 2
 SCOREBOARD_TYPE = 3
 TIP_MESSAGE_TYPE = 4
 BROAD_CAST_TYPE = 5
+
 
 class Tips(Plugin):
 
@@ -42,7 +45,6 @@ class Tips(Plugin):
         if not (Path(self.data_folder) / "theme/default.toml").exists():
             self.save_resources("theme/default.toml")
         self.save_resources("Tips变量.txt", replace=True)
-        pass
 
     def on_enable(self):
         # 加载插件配置
@@ -55,21 +57,38 @@ class Tips(Plugin):
         self.register_events(OnListener())
 
         # 注册Task
+        refresh_set = self.plugin_config.get_refresh_set()
+        
         self.tasks[BOSS_BAR_TYPE] = BossBarTask()
         self.tasks[SCOREBOARD_TYPE] = ScoreBoardTask()
         self.tasks[TIP_MESSAGE_TYPE] = TipTask()
+        self.tasks[NAME_TAG_TYPE] = NameTagTask()
+        self.tasks[BROAD_CAST_TYPE] = BroadcastTask()
 
-        self.server.scheduler.run_task(self, self.tasks[BOSS_BAR_TYPE].on_update, 0, self.plugin_config.get_refresh_set()["Boss血条"])
-        self.server.scheduler.run_task(self, self.tasks[SCOREBOARD_TYPE].on_update, 0, self.plugin_config.get_refresh_set()["计分板"])
-        self.server.scheduler.run_task(self, self.tasks[TIP_MESSAGE_TYPE].on_update, 0, self.plugin_config.get_refresh_set()["底部"])
+        # 启动定时任务
+        self.server.scheduler.run_task(
+            self, self.tasks[BOSS_BAR_TYPE].on_update, 
+            0, refresh_set.get("Boss血条", 20)
+        )
+        self.server.scheduler.run_task(
+            self, self.tasks[SCOREBOARD_TYPE].on_update, 
+            0, refresh_set.get("计分板", 20)
+        )
+        self.server.scheduler.run_task(
+            self, self.tasks[TIP_MESSAGE_TYPE].on_update, 
+            0, refresh_set.get("底部", 20)
+        )
+        self.server.scheduler.run_task(
+            self, self.tasks[NAME_TAG_TYPE].on_update, 
+            0, refresh_set.get("头部", 20)
+        )
+        # 广播任务使用较短间隔检查，实际间隔在任务内部控制
+        self.server.scheduler.run_task(
+            self, self.tasks[BROAD_CAST_TYPE].on_update, 
+            0, 20  # 每秒检查一次
+        )
 
-        self.logger.info("插件加载完成~")
-        pass
+        self.logger.info("Tips 插件加载完成~")
 
     def on_disable(self):
-
         pass
-
-    @property
-    def plugin_loader(self):
-        return self.plugin_loader
