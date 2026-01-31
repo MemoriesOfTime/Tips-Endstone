@@ -40,5 +40,3 @@ echo.
 echo [Done] Build complete!
 echo [Info] Output: dist\
 dir dist\*.whl 2>nul
-
-pause
