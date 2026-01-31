@@ -14,9 +14,24 @@ class ScoreBoardTask(BaseTask):
 
     def on_update(self):
         from endstone_tips.tips import tips_instance
+        
         for player in tips_instance.server.online_players:
-            config = tips_instance.plugin_config.theme.get_scoreboard_set(player.level.name)
-            if not config["是否开启"]:
+            # 检查玩家是否启用此显示
+            if not tips_instance.player_config.is_display_enabled(player.name, "scoreboard"):
+                # 如果计分板已存在，移除显示
+                if player.scoreboard is not None:
+                    objective = player.scoreboard.get_objective(OBJECTIVE_NAME)
+                    if objective is not None:
+                        objective.unregister()
+                continue
+            
+            # 获取玩家的主题配置
+            theme = tips_instance.get_player_theme(player.name)
+            if theme is None:
+                continue
+                
+            config = theme.get_scoreboard_set(player.level.name)
+            if not config.get("是否开启", False):
                 # 如果计分板已存在，移除显示
                 if player.scoreboard is not None:
                     objective = player.scoreboard.get_objective(OBJECTIVE_NAME)
@@ -33,11 +48,11 @@ class ScoreBoardTask(BaseTask):
             objective = player.scoreboard.add_objective(
                 OBJECTIVE_NAME, 
                 Criteria.DUMMY, 
-                str_replace(config["Title"], player)
+                str_replace(config.get("Title", ""), player)
             )
 
             count = 0
-            for line in config["Line"]:
+            for line in config.get("Line", []):
                 objective.get_score(str_replace(line, player)).value = count
                 count += 1
 

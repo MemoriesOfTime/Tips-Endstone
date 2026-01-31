@@ -11,7 +11,9 @@ from endstone_tips.tasks.nametag_task import NameTagTask
 from endstone_tips.tasks.scoreboard_task import ScoreBoardTask
 from endstone_tips.tasks.tip_task import TipTask
 from endstone_tips.utils.api import register_variable
+from endstone_tips.utils.player_config import PlayerConfig
 from endstone_tips.utils.plugin_listener import OnListener
+from endstone_tips.utils.theme_manager import ThemeManager
 from endstone_tips.utils.variables.default_variable import DefaultVariable
 
 tips_instance = None
@@ -67,6 +69,8 @@ class Tips(Plugin):
         tips_instance = self
 
         self.plugin_config = None
+        self.player_config = None
+        self.theme_manager = None
         self.tasks = {}
 
     def on_load(self):
@@ -80,6 +84,12 @@ class Tips(Plugin):
     def on_enable(self):
         # 加载插件配置
         self.plugin_config = PluginConfig(f"{self.data_folder}/config.toml")
+        
+        # 初始化玩家配置管理器
+        self.player_config = PlayerConfig(Path(self.data_folder))
+        
+        # 初始化主题管理器
+        self.theme_manager = ThemeManager(Path(self.data_folder))
 
         # 注册变量
         register_variable("default", DefaultVariable)
@@ -129,3 +139,7 @@ class Tips(Plugin):
 
     def on_disable(self):
         pass
+    
+    def get_player_theme(self, player_name: str):
+        """获取玩家的主题配置"""
+        return self.theme_manager.get_player_theme(player_name)

@@ -15,8 +15,13 @@ class BroadcastTask(BaseTask):
     def on_update(self):
         from endstone_tips.tips import tips_instance
         
-        config = tips_instance.plugin_config.theme.get_broadcast_set("default")
-        if not config["是否开启"]:
+        # 使用默认主题的广播配置
+        theme = tips_instance.theme_manager.get_or_default("default")
+        if theme is None:
+            return
+            
+        config = theme.get_broadcast_set("default")
+        if not config.get("是否开启", False):
             return
         
         messages = config.get("消息轮播", [])
@@ -36,7 +41,11 @@ class BroadcastTask(BaseTask):
         message = messages[self.index]
         self.index = (self.index + 1) % len(messages)
         
-        # 广播给所有玩家
+        # 广播给启用了此功能的玩家
         for player in tips_instance.server.online_players:
+            # 检查玩家是否启用此显示
+            if not tips_instance.player_config.is_display_enabled(player.name, "broadcast"):
+                continue
+            
             processed_message = str_replace(message, player)
             player.send_message(processed_message)

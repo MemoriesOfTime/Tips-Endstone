@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from endstone import Player
-from endstone.form import ActionForm, ModalForm, Button, Dropdown, Toggle, TextInput, Label
+from endstone.form import ActionForm, ModalForm, Button, Dropdown, Toggle, TextInput
 
 
 # 显示类型枚举
@@ -46,6 +46,12 @@ def show_main_menu(player: Player):
         text="§d选择主题样式",
         icon="textures/ui/color_picker",
         on_click=lambda p: show_theme_selector(p)
+    ))
+    
+    form.add_button(Button(
+        text="§7个人显示设置",
+        icon="textures/ui/icon_setting",
+        on_click=lambda p: show_personal_settings(p)
     ))
     
     form.on_close = lambda p: None
@@ -110,6 +116,53 @@ def show_display_type_menu(player: Player, target_player: Optional[str]):
         ))
     
     form.on_close = lambda p: None
+    player.send_form(form)
+
+
+def show_personal_settings(player: Player):
+    """显示玩家个人设置"""
+    from endstone_tips.tips import tips_instance
+    
+    # 获取当前玩家配置
+    config = tips_instance.player_config.load(player.name)
+    displays = config.get("displays", {})
+    
+    form = ModalForm(title="§7个人显示设置")
+    
+    # 添加各显示类型的开关
+    form.add_control(Toggle(
+        label="Boss血条",
+        default=displays.get("boss_bar", True)
+    ))
+    form.add_control(Toggle(
+        label="计分板",
+        default=displays.get("scoreboard", True)
+    ))
+    form.add_control(Toggle(
+        label="底部显示",
+        default=displays.get("tip", True)
+    ))
+    form.add_control(Toggle(
+        label="头部显示",
+        default=displays.get("nametag", True)
+    ))
+    form.add_control(Toggle(
+        label="聊天栏公告",
+        default=displays.get("broadcast", True)
+    ))
+    
+    def on_submit(p: Player, data: list):
+        # 保存设置
+        tips_instance.player_config.set_display_enabled(p.name, "boss_bar", data[0])
+        tips_instance.player_config.set_display_enabled(p.name, "scoreboard", data[1])
+        tips_instance.player_config.set_display_enabled(p.name, "tip", data[2])
+        tips_instance.player_config.set_display_enabled(p.name, "nametag", data[3])
+        tips_instance.player_config.set_display_enabled(p.name, "broadcast", data[4])
+        p.send_message("§a个人显示设置已保存!")
+    
+    form.on_submit = on_submit
+    form.on_close = lambda p: show_main_menu(p)
+    
     player.send_form(form)
 
 
@@ -209,23 +262,23 @@ def show_theme_selector(player: Player):
         content="请选择你喜欢的样式"
     )
     
-    theme_dir = Path(tips_instance.data_folder) / "theme"
-    themes = []
-    
-    if theme_dir.exists():
-        for f in theme_dir.glob("*.toml"):
-            themes.append(f.stem)
+    # 获取当前玩家主题
+    current_theme = tips_instance.player_config.get_theme(player.name)
+    themes = tips_instance.theme_manager.list_themes()
     
     for theme in themes:
+        # 标记当前使用的主题
+        label = f"§a✓ {theme}" if theme == current_theme else theme
         form.add_button(Button(
-            text=theme,
+            text=label,
             icon="textures/ui/color_picker",
-            on_click=lambda p, t=theme: _switch_theme(p, t)
+            on_click=lambda p, t=theme: _switch_player_theme(p, t)
         ))
     
     form.add_button(Button(
-        text="§7关闭样式",
-        on_click=lambda p: p.send_message("§7样式功能已关闭")
+        text="§6重载所有主题",
+        icon="textures/ui/refresh_light",
+        on_click=lambda p: _reload_all_themes(p)
     ))
     
     form.add_button(Button(
@@ -245,24 +298,35 @@ def _reload_config(player: Player):
     
     try:
         tips_instance.plugin_config = PluginConfig(f"{tips_instance.data_folder}/config.toml")
+        tips_instance.theme_manager.reload_all()
+        tips_instance.player_config.clear_cache()
         player.send_message("§a配置重新加载成功!")
     except Exception as e:
         player.send_message(f"§c配置加载失败: {e}")
 
 
-def _switch_theme(player: Player, theme_name: str):
-    """切换主题"""
+def _switch_player_theme(player: Player, theme_name: str):
+    """切换玩家主题"""
     from endstone_tips.tips import tips_instance
-    from endstone_tips.config import ThemeConfig
     
-    theme_file = Path(tips_instance.data_folder) / "theme" / f"{theme_name}.toml"
-    
-    if not theme_file.exists():
+    if not tips_instance.theme_manager.exists(theme_name):
         player.send_message(f"§c主题 '{theme_name}' 不存在")
         return
     
-    try:
-        tips_instance.plugin_config.theme = ThemeConfig(str(theme_file))
-        player.send_message(f"§a已切换到主题: {theme_name}")
-    except Exception as e:
-        player.send_message(f"§c加载主题失败: {e}")
+    # 保存玩家的主题选择
+    tips_instance.player_config.set_theme(player.name, theme_name)
+    player.send_message(f"§a已切换到主题: {theme_name}")
+    
+    # 重新打开主题选择器
+    show_theme_selector(player)
+
+
+def _reload_all_themes(player: Player):
+    """重载所有主题"""
+    from endstone_tips.tips import tips_instance
+    
+    tips_instance.theme_manager.reload_all()
+    player.send_message(f"§a已重载 {len(tips_instance.theme_manager.list_themes())} 个主题")
+    
+    # 重新打开主题选择器
+    show_theme_selector(player)
