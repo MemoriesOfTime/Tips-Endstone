@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "endstone_tips"
+name = "endstone-tips"
 version = "0.1.0"
 description = "Tips plugin for Endstone - supports BossBar, Scoreboard, Tip, Chat and Broadcast messages"
 readme = "README.md"
