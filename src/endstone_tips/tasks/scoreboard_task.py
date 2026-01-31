@@ -1,9 +1,14 @@
-from endstone.scoreboard import Criteria, DisplaySlot
+# 兼容不同版本的 endstone
+try:
+    from endstone.scoreboard import Criteria, DisplaySlot
+except ImportError:
+    from endstone import Criteria, DisplaySlot
 
 from endstone_tips.tasks.base_task import BaseTask
 from endstone_tips.utils.api import str_replace
 
 OBJECTIVE_NAME = "__TIPS_SIDEBAR_OBJECTIVE__"
+
 
 class ScoreBoardTask(BaseTask):
 
@@ -12,6 +17,11 @@ class ScoreBoardTask(BaseTask):
         for player in tips_instance.server.online_players:
             config = tips_instance.plugin_config.theme.get_scoreboard_set(player.level.name)
             if not config["是否开启"]:
+                # 如果计分板已存在，移除显示
+                if player.scoreboard is not None:
+                    objective = player.scoreboard.get_objective(OBJECTIVE_NAME)
+                    if objective is not None:
+                        objective.unregister()
                 continue
 
             if player.scoreboard is None:
@@ -20,7 +30,11 @@ class ScoreBoardTask(BaseTask):
             objective = player.scoreboard.get_objective(OBJECTIVE_NAME)
             if objective is not None:
                 objective.unregister()
-            objective = player.scoreboard.add_objective(OBJECTIVE_NAME, Criteria.DUMMY, str_replace(config["Title"], player))
+            objective = player.scoreboard.add_objective(
+                OBJECTIVE_NAME, 
+                Criteria.DUMMY, 
+                str_replace(config["Title"], player)
+            )
 
             count = 0
             for line in config["Line"]:
@@ -29,6 +43,3 @@ class ScoreBoardTask(BaseTask):
 
             if count > 0:
                 objective.set_display(DisplaySlot.SIDE_BAR)
-
-        pass
-
