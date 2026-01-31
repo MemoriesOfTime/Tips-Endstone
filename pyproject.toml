@@ -3,18 +3,58 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "endstone_tips"
-version = "0.0.7"
-dependencies = []
+name = "endstone-tips"
+version = "0.1.0"
+description = "Tips plugin for Endstone - supports BossBar, Scoreboard, Tip, Chat and Broadcast messages"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
 authors = [
     { name = "LT_Name" }
 ]
-readme = "README.md"
-license = { file = "LICENSE" }
-keywords = ["endstone", "plugin", "tips", "scoreboard"]
+keywords = ["endstone", "plugin", "tips", "scoreboard", "bossbar"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "endstone>=0.10.0",
+    "tomlkit>=0.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.1.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/MemoriesOfTime/Tips-Endstone"
+Repository = "https://github.com/MemoriesOfTime/Tips-Endstone"
+Issues = "https://github.com/MemoriesOfTime/Tips-Endstone/issues"
 
 [project.entry-points."endstone"]
 tips = "endstone_tips:Tips"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.1.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/endstone_tips"]
