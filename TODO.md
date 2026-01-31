@@ -74,9 +74,9 @@
 
 ### Phase 2: 命令系统 (优先级: 高)
 
-- [ ] 2.1 /tips reload (1h)
-- [ ] 2.2 /tips send (2h)
-- [ ] 2.3 /tips theme (2h)
+- [x] 2.1 /tips reload (1h) ✅ 2026-01-31
+- [x] 2.2 /tips send (2h) ✅ 2026-01-31
+- [x] 2.3 /tips theme (2h) ✅ 2026-01-31
 
 ### Phase 3: GUI 系统 (优先级: 中)
 
@@ -103,6 +103,9 @@
 
 ## 📝 更新日志
 
+- 2026-01-31: Phase 2 完成
+  - 添加命令系统: /tips reload, send, theme, help
+  - 权限: tips.command, tips.admin
 - 2026-01-31: Phase 1 完成
   - 添加 NameTag 任务
   - 添加 Broadcast 广播任务
