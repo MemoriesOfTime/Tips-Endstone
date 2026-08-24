@@ -30,7 +30,7 @@ BROAD_CAST_TYPE = 5
 class Tips(Plugin):
 
     prefix = "Tips"
-    version = "0.1.0"
+    version = "0.1.1"
     api_version = "0.10"
 
     description = "Tips plugin for Endstone."
@@ -81,7 +81,9 @@ class Tips(Plugin):
         self.save_default_config()
         if not (Path(self.data_folder) / "theme/default.toml").exists():
             self.save_resources("theme/default.toml")
-        self.save_resources("Tips变量.txt", replace=True)
+        # 注意: 资源文件名必须为 ASCII，部分服务器环境 (如 Docker 默认 locale) 的
+        # 文件系统编码为 ASCII，非 ASCII 文件名会导致 save_resources 抛出 UnicodeEncodeError
+        self.save_resources("tips_variables.txt", replace=True)
 
     def on_enable(self):
         # 加载插件配置

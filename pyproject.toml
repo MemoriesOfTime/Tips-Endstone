@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "endstone-tips"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tips plugin for Endstone - supports BossBar, Scoreboard, Tip, Chat and Broadcast messages"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -58,3 +58,7 @@ ignore = ["E501"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/endstone_tips"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
