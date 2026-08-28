@@ -33,6 +33,8 @@ class Tips(Plugin):
     version = "0.1.3"
     api_version = "0.10"
 
+    soft_depend = ["umoney", "economyapi"]
+
     description = "Tips plugin for Endstone."
 
     # 命令注册
