@@ -103,17 +103,15 @@ class DefaultVariable(BaseVariable):
         # 指南针
         self.add_variable("{view}", self._get_compass(self.player.location.yaw))
 
-        # 手持物品 (需要检查 API 是否支持)
+        # 手持物品 (Endstone 0.10+: PlayerInventory.item_in_main_hand，空手为 None)
         try:
-            inventory = self.player.inventory
-            if inventory and hasattr(inventory, 'item_in_hand'):
-                item = inventory.item_in_hand
-                if item:
-                    self.add_variable("{id}", item.type if hasattr(item, 'type') else "air")
-                    self.add_variable("{damage}", str(item.damage if hasattr(item, 'damage') else 0))
-                else:
-                    self.add_variable("{id}", "air")
-                    self.add_variable("{damage}", "0")
+            item = self.player.inventory.item_in_main_hand
+            if item:
+                item_id = item.type.id
+                if item_id.startswith("minecraft:"):
+                    item_id = item_id[len("minecraft:"):]
+                self.add_variable("{id}", item_id)
+                self.add_variable("{damage}", str(item.data))
             else:
                 self.add_variable("{id}", "air")
                 self.add_variable("{damage}", "0")
@@ -135,12 +133,8 @@ class DefaultVariable(BaseVariable):
 
         # 经验值
         try:
-            if hasattr(self.player, 'exp_level'):
-                self.add_variable("{player_exp}", str(self.player.exp))
-                self.add_variable("{player_exp_level}", str(self.player.exp_level))
-            else:
-                self.add_variable("{player_exp}", "0")
-                self.add_variable("{player_exp_level}", "0")
+            self.add_variable("{player_exp}", str(self.player.total_exp))
+            self.add_variable("{player_exp_level}", str(self.player.exp_level))
         except Exception:
             self.add_variable("{player_exp}", "0")
             self.add_variable("{player_exp_level}", "0")
