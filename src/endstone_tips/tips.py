@@ -30,7 +30,7 @@ BROAD_CAST_TYPE = 5
 class Tips(Plugin):
 
     prefix = "Tips"
-    version = "0.1.1"
+    version = "0.1.2"
     api_version = "0.10"
 
     description = "Tips plugin for Endstone."
