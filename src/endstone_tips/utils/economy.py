@@ -162,6 +162,7 @@ class EconomyManager:
     def _register_providers(self):
         """注册所有支持的经济插件提供者"""
         self._providers.append(UMoneyProvider(self.server))
+        self._providers.append(JsonMoneyProvider(self.server))
         self._providers.append(GenericEconomyProvider(self.server))
 
     def get_active_provider(self) -> Optional[EconomyProvider]:
