@@ -14,6 +14,42 @@ class EconomyProvider:
         """检查经济插件是否可用"""
         raise NotImplementedError
 
+class JsonMoneyProvider(EconomyProvider):
+    """ 兼容ye111566_jsonmoney """
+    PLUGIN_NAME = "Ye111566_jsonmoney"
+
+    def __init__(self, server):
+        self.server = server
+        self._plugin = None
+
+    def _get_plugin(self):
+        """ 获取 JsonMoney 插件实例  """
+        if self._plugin is None:
+            maneger = self.server.plugin_manager
+            plugin = maneger.get_plugin(self.PLUGIN_NAME)
+            if plugin is not None and maneger.is_plugin_enabled(plugin):
+                self._plugin = plugin
+        return self._plugin
+
+    def is_available(self) -> bool:
+        plugin = self._get_plugin()
+        if plugin is None:
+            return False
+        if not self.server.plugin_manager.is_plugin_enabled(plugin):
+            self._plugin = None
+            return False
+        return True
+
+    def get_balance(self, player_name: str) -> Optional[float]:
+        plugin = self._get_plugin()
+        if plugin is None:
+            return None
+
+        try:
+            return float(plugin.get_money(player_name))
+        except Exception:
+            return None
+
 
 class UMoneyProvider(EconomyProvider):
     """UMoney 经济插件提供者（首选）"""

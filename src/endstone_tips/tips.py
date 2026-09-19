@@ -33,7 +33,7 @@ class Tips(Plugin):
     version = "0.1.3"
     api_version = "0.10"
 
-    soft_depend = ["umoney", "economyapi"]
+    soft_depend = ["ye111566_jsonmoney", "umoney", "economyapi"]
 
     description = "Tips plugin for Endstone."
 
