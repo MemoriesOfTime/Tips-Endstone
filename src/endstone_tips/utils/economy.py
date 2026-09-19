@@ -16,7 +16,7 @@ class EconomyProvider:
 
 class JsonMoneyProvider(EconomyProvider):
     """ 兼容ye111566_jsonmoney """
-    PLUGIN_NAME = "Ye111566_jsonmoney"
+    PLUGIN_NAME = "ye111566_jsonmoney"
 
     def __init__(self, server):
         self.server = server
